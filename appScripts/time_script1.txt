@@ -1,0 +1,35 @@
+function getJsonDataBasdOnTime() {
+
+  var SHEET_NAME ='Sheet1';
+  var COLUMN_NUMBER = 2;
+
+  currentTime = new Date();
+  var hour = currentTime.getHours();
+  var min = currentTime.getMinutes();
+  
+  var roundedMins = Math.floor(min/5);
+  var startingRowNumber = hour*12 + roundedMins;
+  var endingRowNumber = startingRowNumber+35;
+  
+  
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(SHEET_NAME);
+  
+  jsonOutput = [];
+  
+  for(i=startingRowNumber;i<=endingRowNumber;i++){
+    
+    jsonOutput.push(sheet.getRange(i, COLUMN_NUMBER).getValue());
+  }
+  
+  
+  return jsonOutput;
+}
+
+
+
+function doGet(e){
+  
+  var unprocessedRowsData = getJsonDataBasdOnTime();
+  return ContentService.createTextOutput(JSON.stringify(unprocessedRowsData) ).setMimeType(ContentService.MimeType.JSON);
+}
