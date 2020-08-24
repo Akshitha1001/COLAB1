@@ -1,11 +1,4 @@
-#define trigPin 10
-#define echoPin 12
-#define sumpPin 4
-#define trigPin2 3
-#define echoPin2 7
-#define mncplPin 9
-#define mncplSolPin 8 // solenoid for Muncipal Water
-#define sumpSolPin 6 // Solenoid for Over head tank
+#include "pins.c"
 
 int ovmax = 304; // Overhead tank maximum height minus 4 cms:
 int ovmin = 10; // Over head tank minimum height 10 cms  plus bottom:
@@ -86,22 +79,6 @@ void loop() {
         digitalWrite(sumpPin, LOW); // Stops motor to over head tank:
         digitalWrite(sumpSolPin, LOW);// inactivate solenoid of overhead tank:
     }
-    // if (ovdistance <= 10){
-    //    Serial.println(" level lowest ");
-    //   digitalWrite(relayPin, HIGH);
-    //}
-    // else{
-    // Serial.print(distance1);
-    // digitalWrite(relayPin, LOW);
-    //}
-    // if (distance1 <= 25){
-    //    Serial.println(" level lowest ");
-    //   digitalWrite(relayPin2, HIGH);
-    //}
-
-    //else{
-    //Serial.print(distance1);
-    //digitalWrite(relayPin2, LOW);
-    //}
+    
     delay(700);
 }
