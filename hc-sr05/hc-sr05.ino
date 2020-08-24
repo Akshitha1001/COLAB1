@@ -103,5 +103,5 @@ void loop() {
     //Serial.print(distance1);
     //digitalWrite(relayPin2, LOW);
     //}
-    delay(500);
+    delay(700);
 }
