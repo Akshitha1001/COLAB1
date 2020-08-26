@@ -6,7 +6,6 @@
  *  All rights reserved.
  *
  */
-
 #include "HTTPSRedirect.h"
 #include "DebugMacros.h"
 
