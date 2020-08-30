@@ -9,13 +9,13 @@ in NodeMCU_Redirect.ino file code
 in setup we are connecting our our board our wifi newtwork
 in loop only one time we a request to our server to establish a connection 
 once the connection in esatblished we can make a requests to server in this ways
-GET request
+### GET request
 
     client->GET(url, host);
     String response = client->getResponseBody();
 where response stores the returned data in the form of String
 
-POST request
+### POST request
 
     client->POST(url, host, payload, false);
     String response = client->getResponseBody();   
