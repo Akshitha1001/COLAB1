@@ -88,7 +88,6 @@ bool HTTPSRedirect::printRedir(void){
             //stop(); // may not be required
 
             _myResponse.redirected = true;
-            Serial.println(_redirHost + _httpsPort);
             // Make a new connection to the re-direction server
             if (!connect(_redirHost.c_str(), _httpsPort)) {
               Serial.println("Connection to re-directed URL failed!");
