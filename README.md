@@ -14,21 +14,25 @@ if depth is >5 then switch value is 1 (response)
 ### GET request
 *url* : http://jayashankar.pythonanywhere.com/abcdef/depth?d=9
 
-    *response* : {
-                    "switch":1
-                } ->status of switch
+	response : {
+   			"switch":1
+   		    } 
+		
+->status of switch
 
 
 ### POST request
 *url* : http://jayashankar.pythonanywhere.com/abcdef/depth
 
-    *body* : {
+    body :  {
                 "depth" : 2
-            }
+             }
     
-*response* : {
-    "switch":0
-                } ->status of switch 
+    response :{
+    		"switch":0
+              } 
+
+->status of switch 
 ->it stores the data recieved into the database and responds back
     
 ### Database:
