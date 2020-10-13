@@ -13,6 +13,7 @@ This folder contains server code made using Flask and tests code
 if depth is >5 then switch value is 1 (response)
 ### GET request
 *url* : http://jayashankar.pythonanywhere.com/abcdef/depth?d=9
+
     *response* : {
                     "switch":1
                 } ->status of switch
@@ -20,6 +21,7 @@ if depth is >5 then switch value is 1 (response)
 
 ### POST request
 *url* : http://jayashankar.pythonanywhere.com/abcdef/depth
+
     *body* : {
                 "depth" : 2
             }
