@@ -2,6 +2,44 @@
 Code for NODEMCU
 ## *HC-SR05 and HC-SR04* 
 This folders contain code usage of HC-SR05 sensor as per our requirements
+
+---
+## *server*
+This folder contains server code made using Flask and tests code 
+
+
+*secret key* : **abcdef**
+
+if depth is >5 then switch value is 1 (response)
+### GET request
+*url* : http://jayashankar.pythonanywhere.com/abcdef/depth?d=9
+    *response* : {
+                    "switch":1
+                } ->status of switch
+
+
+### POST request
+*url* : http://jayashankar.pythonanywhere.com/abcdef/depth
+    *body* : {
+                "depth" : 2
+            }
+    
+*response* : {
+    "switch":0
+                } ->status of switch 
+->it stores the data recieved into the database and responds back
+    
+### Database:
+
+|Field  | Type  | Null   | Key  |Default   |Extra |
+|---|---|---|---|---| ---|
+ id     | int(11)    | NO   | PRI | NULL    | auto_increment |
+| time   | datetime   | YES  |     | NULL    |         fds       |
+| depth  | float      | YES  |     | NULL    |        fs        |
+| switch | tinyint(1) | YES  |     | NULL    |        s        |
+
+---
+
 ## *NodeMCU_Redirects*
 This folder contains code for making GET and POST to our spreadsheet
 
@@ -9,6 +47,7 @@ in NodeMCU_Redirect.ino file code
 in setup we are connecting our our board our wifi newtwork
 in loop only one time we a request to our server to establish a connection 
 once the connection in esatblished we can make a requests to server in this ways
+
 ### GET request
 
     client->GET(url, host);
@@ -46,4 +85,4 @@ This folder contains  appScripts for our SpreadSheets
 
 in time_script1.txt  for testing purppose we can cacluate the row using the formula:
 
-    var rowNumber = hour*60*4 + roundedMins*4 + roundedSeconds;
+    var rowNumber = hour*60*4 - roundedMins*4 - roundedSeconds;
