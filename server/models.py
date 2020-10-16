@@ -1,6 +1,6 @@
 
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask,session
+from flask import Flask
 from datetime import datetime
 
 
@@ -18,10 +18,10 @@ db = SQLAlchemy()
 
 class TimeSheet(db.Model):
     __tablename__ = "time_sheet"
-    id = db.Column(db.Integer, primary_key=True)
-    time = db.Column(db.DateTime, default = datetime.utcnow)
-    depth = db.Column(db.Float)
-    switch = db.Column(db.Boolean)
+    id      = db.Column(db.Integer, primary_key=True)
+    time    = db.Column(db.DateTime, default = datetime.utcnow)
+    depth   = db.Column(db.Float)
+    switch  = db.Column(db.Boolean)
 
     def __repr__(self):
         return ('<Depth %r>' % str(self.depth) +"time : "+str(self.time))
