@@ -1,18 +1,7 @@
 
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask
 from datetime import datetime
 
-
-
-# SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
-#     username="JayaShankar",
-#     password="nothing098.",
-#     hostname="JayaShankar.mysql.pythonanywhere-services.com",
-#     databasename="JayaShankar$timeSheet",
-# )
-
-# SQLALCHEMY_DATABASE_URI = "sqlite:///test2.db"
 
 db = SQLAlchemy()
 
