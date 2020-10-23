@@ -64,6 +64,8 @@ The function we will be using :
 
 *returns* : DynamicJsonDocument
 
+Example :
+
     DynamicJsonDocument re_GET = make_GET_request(2);
     Serial.println(String(int(re_GET["switch"]))); //output 0
 
@@ -73,6 +75,8 @@ The function we will be using :
 *input* : int(depth)
 
 *returns* : DynamicJsonDocument
+
+Example :
 
     DynamicJsonDocument re_POST = make_POST_request(9);
     Serial.println(String(int(re_POST["switch"]))); // output 1
