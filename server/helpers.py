@@ -28,10 +28,7 @@ def process_GET(data):
 
     switch = decide_switch(data["depth"])
 
-    return flask.make_response(
-        {"switch" : switch},
-        HTTPStatus.OK,
-    )
+    return respond_with_switch(switch)
 
 def process_POST(data):
     if not data["depth"]:
@@ -46,10 +43,7 @@ def process_POST(data):
             {"message" : "some error while storing in database"},
             HTTPStatus.INTERNAL_SERVER_ERROR
         )
-    return flask.make_response(
-        {"switch" : switch},
-            HTTPStatus.OK
-    )
+    return respond_with_switch(switch)
 
 def is_authorized(key):
     if key != SECRET_KEY:
@@ -61,6 +55,12 @@ def decide_switch(depth):
         return 1
     return 0
 
+
+def respond_with_switch(switch):
+    return flask.make_response(
+        {"switch" : switch},
+            HTTPStatus.OK
+    )
 
 def respond_invalid_format():
     return flask.make_response(

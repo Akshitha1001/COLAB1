@@ -1,11 +1,12 @@
 import unittest
 import requests
 
+
 class TestGETMethods(unittest.TestCase):
 
     def test_get_invalid(self):
         response = requests.get("http://jayashankar.pythonanywhere.com/abcdef/depth")
-        self.assertEqual(response.status_code, 402)
+        self.assertEqual(response.status_code, 406)
 
     def test_secret_key_invalid(self):
         response = requests.get("http://jayashankar.pythonanywhere.com/abcde/depth")
@@ -30,7 +31,7 @@ class TestPOSTMethods(unittest.TestCase):
 
     def test_post_invalid(self):
         response = requests.post("http://jayashankar.pythonanywhere.com/abcdef/depth")
-        self.assertEqual(response.status_code, 402)
+        self.assertEqual(response.status_code, 406)
 
     def test_post_switch_on(self):
         body = {'depth': 9}
