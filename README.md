@@ -48,13 +48,20 @@ if depth is >5 then switch value is 1 (response)
 
 ## *GSM_code*
 This folder contains code for SIM900A board
+
 there are 5 files and the main file is GSM_code 
+
 In the setup first we run the basic commands required to establish HTTPconncetion for our board
+
 then in loop we alternatively call GET and POST request functions and print the output
+
 The function we will be using :
+
 ### GET request
 *function* : **make_GET_request(int)**
+
 *input* : int(depth)
+
 *returns* : DynamicJsonDocument
 
     DynamicJsonDocument re_GET = make_GET_request(2);
@@ -62,7 +69,9 @@ The function we will be using :
 
 ### POST request
 *function* : **make_POST_request(int)**
+
 *input* : int(depth)
+
 *returns* : DynamicJsonDocument
 
     DynamicJsonDocument re_POST = make_POST_request(9);
