@@ -1,37 +1,33 @@
-#include "convert_json.h"
 
 
-void GET_request(int);
-void POST_request(int);
+void GET_request(float);
+void POST_request(float);
 
-DynamicJsonDocument make_GET_request(int depth) {
+void make_GET_request(float depth,JsonDocument& doc) {
 
-  while(actionState != AS_IDLE);
+  if(actionState != AS_IDLE) return;
   GET_request(depth);
-  while(actionState != AS_RECEIVED_RESPONSE);
+  if(actionState != AS_RECEIVED_RESPONSE) return;
   
   if(actionState == AS_RECEIVED_RESPONSE) {
-    DynamicJsonDocument json = JSONIFY(response);
     actionState = AS_IDLE;
-    return json;
+    return;
   }
 }
 
-DynamicJsonDocument make_POST_request(int depth) {
+void make_POST_request(float depth,JsonDocument& doc) {
   
   while(actionState != AS_IDLE);
   POST_request(depth);
   while(actionState != AS_RECEIVED_RESPONSE);
   if(actionState == AS_RECEIVED_RESPONSE) {
-    DynamicJsonDocument json = JSONIFY(response);
-    
     actionState = AS_IDLE;
-    return json;
+    return;
   }
 }
   
 
-void GET_request(int depth) {
+void GET_request(float depth) {
   if(actionState != AS_IDLE)
     return; 
   Serial.println("GET request:  ");
@@ -39,7 +35,6 @@ void GET_request(int depth) {
   response = "";
   String para = "AT+HTTPPARA=\"URL\"";
   String url = "\"http://jayashankar.pythonanywhere.com/abcdef/depth?d=";
-  
   String comand = para + ","+url + String(depth) + "\"";
   sendGSM(comand);
   sendGSM("AT+HTTPACTION=0");
@@ -52,7 +47,7 @@ void GET_request(int depth) {
 
 
 
-void POST_request(int depth) {
+void POST_request(float depth) {
   
   if(actionState != AS_IDLE)
     return; 

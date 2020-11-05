@@ -1,10 +1,11 @@
 #include <SoftwareSerial.h>
 #include "data_types.h"
-
+#define MAX_LENGHT 75
 
 //SoftwareSerial GSM(7, 8); // RX, TX
 
 void parseATText(byte);
+void add_to_response(String, String);
 
 byte actionState = AS_IDLE;
 unsigned long lastActionTime = 0;
@@ -13,7 +14,9 @@ byte parseState = PS_DETECT_MSG_TYPE;
 char buffer[180];
 byte pos = 0;
 String response;
+char response_arr[MAX_LENGHT];
 int contentLength = 0;
+String status_code;
 
 void resetBuffer() {
   memset(buffer, 0, sizeof(buffer));
@@ -43,21 +46,9 @@ void checkGSM() {
 void parseATText(byte b) {
 
   buffer[pos++] = b;
-//     Serial.print("size of buffer = ");
-//   Serial.println(sizeof(buffer));
 
   if ( pos >= sizeof(buffer) )
     resetBuffer(); // just to be safe
-   // Detailed debugging
-//   Serial.println();
-//   Serial.print("state = ");
-//   //Serial.println(state);
-//   Serial.print("b = ");
-//   Serial.println(b);
-//   Serial.print("pos = ");
-//   Serial.println(pos);
-//   Serial.print("buffer = ");
-//   Serial.println(buffer);
 
   switch (parseState) {
   case PS_DETECT_MSG_TYPE: 
@@ -69,15 +60,11 @@ void parseATText(byte b) {
           parseState = PS_IGNORING_COMMAND_ECHO;
         }
         else if ( b == ':' ) {
-          Serial.print("Checking message type: ");
-          Serial.println(buffer);
 
           if ( strcmp(buffer, "+HTTPACTION:") == 0 ) {
-            Serial.println("Received HTTPACTION");
             parseState = PS_HTTPACTION_TYPE;
           }
-          else if ( strcmp(buffer, "+HTTPREAD:") == 0 ) {
-            Serial.println("Received HTTPREAD");            
+          else if ( strcmp(buffer, "+HTTPREAD:") == 0 ) {          
             parseState = PS_HTTPREAD_LENGTH;
           }
           resetBuffer();
@@ -89,8 +76,6 @@ void parseATText(byte b) {
   case PS_IGNORING_COMMAND_ECHO:
     {
       if ( b == '\n' ) {
-        Serial.print("Ignoring echo: ");
-        Serial.println(buffer);
         parseState = PS_DETECT_MSG_TYPE;
         resetBuffer();
       }
@@ -100,10 +85,8 @@ void parseATText(byte b) {
   case PS_HTTPACTION_TYPE:
     {
       if ( b == ',' ) {
-        Serial.print("HTTPACTION type is ");
-        Serial.println(buffer);
-        
         parseState = PS_HTTPACTION_RESULT;
+        status_code = "";
         resetBuffer();
       }
     }
@@ -112,10 +95,11 @@ void parseATText(byte b) {
   case PS_HTTPACTION_RESULT:
     {
       if ( b == ',' ) {
-        Serial.print("HTTPACTION result is ");
-        Serial.println(buffer);
         parseState = PS_HTTPACTION_LENGTH;
         resetBuffer();
+      }
+      else {
+        status_code+=char(b);
       }
     }
     break;
@@ -123,9 +107,6 @@ void parseATText(byte b) {
   case PS_HTTPACTION_LENGTH:
     {
       if ( b == '\n' ) {
-        Serial.print("HTTPACTION length is ");
-        Serial.println(buffer);
-        
         // now request content
         GSM.print("AT+HTTPREAD=0,");
         GSM.println(buffer);
@@ -140,11 +121,6 @@ void parseATText(byte b) {
     {
       if ( b == '\n' ) {
         contentLength = atoi(buffer);
-        Serial.print("HTTPREAD length is ");
-        Serial.println(contentLength);
-        
-        //Serial.print("HTTPREAD content: ");
-        
         parseState = PS_HTTPREAD_CONTENT;
         resetBuffer();
       }
@@ -154,20 +130,27 @@ void parseATText(byte b) {
   case PS_HTTPREAD_CONTENT:
     {
       // for this demo I'm just showing the content bytes in the serial monitor
-      //Serial.write(b);
-      response = response + char(b);
+      Serial.write(b);
+      response += char(b);
       contentLength--;
       
       if ( contentLength <= 0 ) {
 
         // all content bytes have now been read
-
+        add_to_response("status_code",status_code);
         parseState = PS_DETECT_MSG_TYPE;
         resetBuffer();
-        
+        response.toCharArray(response_arr, response.length());
         actionState = AS_RECEIVED_RESPONSE;
       }
     }
     break;
   }
+}
+
+void add_to_response(String key , String value) {
+  response.trim();
+  response.remove(response.length()-1,1);
+  response = response + ",\"" + key + "\":" + value + "}";
+  
 }

@@ -1,7 +1,14 @@
 import flask
 from http import HTTPStatus
-from create import SECRET_KEY,MIN_DEPTH
+from create import SECRET_KEY
 from models import TimeSheet
+
+
+MIN_DEPTH = 3.00
+MAX_DEPTH = 9.00
+# normal scenario - input, method call (input), output 
+
+
 
 def extract_url_data():
     data = {}
@@ -51,9 +58,11 @@ def is_authorized(key):
     return True
 
 def decide_switch(depth):
-    if depth > MIN_DEPTH:
+    if depth == MIN_DEPTH :  # MIN_DEPTH = 3.00 and MAX_DEPTH = 9.00
         return 1
-    return 0
+    elif depth == MAX_DEPTH:
+        return 0
+    return -1
 
 
 def respond_with_switch(switch):
