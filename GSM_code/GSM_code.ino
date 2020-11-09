@@ -8,11 +8,10 @@ SoftwareSerial GSM(recevier, transferer); // RX-pin7, TX-pin8
 #include "hcsr04.h"
 #include "relay.h"
 
-
+String APN_name = "airtelgprs.com"; // change the APN name as per the SIM card
 
 int swi;
-float depth=10.0;
-float duration;
+float depth;
 const size_t capacity = JSON_OBJECT_SIZE(1) + 30;
 DynamicJsonDocument doc(capacity);
 
@@ -26,8 +25,10 @@ void setup()
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
   pinMode(relayPin, OUTPUT);
-  
-  sendGSM("AT+SAPBR=3,1,\"APN\",\"airtelgprs.com\"");  
+  char comand[50];
+  String cmd = "AT+SAPBR=3,1,\"APN\",\"" + APN_name + "\"";
+  cmd.toCharArray(comand , cmd.length());
+  sendGSM(comand);  
   sendGSM("AT+SAPBR=1,1",3000);
   sendGSM("AT+HTTPINIT");  
   sendGSM("AT+HTTPPARA=\"CID\",1");
@@ -42,15 +43,15 @@ void loop()
     
 //  ----- SENDING DATA TO SERVER VIA GET REQUEST ---------
 //  ------ FOR GET METHOD ----
-    make_GET_request(depth,doc);
-    deserializeJson(doc, response_arr);
-//    serializeJson(doc, Serial);
-//    
-    Serial.println("\n");
+
+//    make_GET_request(depth,doc);
+  
 //  ------ FOR POST METHOD ----
-//    make_POST_request(depth,doc);
-//    deserializeJson(doc, response_arr);
-//    serializeJson(doc, Serial);
+
+    make_POST_request(depth,doc);
+
+//  ------ CONVERTING TO JSON ----   
+    deserializeJson(doc, response_arr);
 
 //   ----- CHANGING RELAY STATE USING RESPONSE ---------
       if(doc["status_code"]!=200) {
@@ -61,9 +62,9 @@ void loop()
             swi = int(doc["switch"]);
             turn_bulb(swi);    
       }
-    Serial.print("Level of motor : " + String(depth) + " and switch is " + String(digitalRead(relayPin)))
+    Serial.print("Level of motor : " + String(depth) + " and switch is " + String(digitalRead(relayPin)));
     Serial.println("\n\n\n");
     delay(5000);
-    
-   
+
+
 }
