@@ -6,9 +6,11 @@
 
 void parseATText(byte);
 void add_to_response(String, String);
+void reset_Arduino(void);
 
 byte actionState = AS_IDLE;
 unsigned long lastActionTime = 0;
+
 
 byte parseState = PS_DETECT_MSG_TYPE;
 char buffer[180];
@@ -28,23 +30,30 @@ void resetBuffer() {
 void sendGSM(String msg, int waitMs = 500) {
   GSM.println(msg);
   while(GSM.available()) {
+    
     byte b = GSM.read();
     parseATText(b);
   }
   delay(waitMs);
 }
 
+
 void checkGSM() {
+  lastActionTime = millis();
   while(actionState == AS_WAITING_FOR_RESPONSE) { 
     while(GSM.available()) {
       parseATText(GSM.read());
     }
+    if(lastActionTime + 10000 <=millis()){
+        actionState = AS_LOST_CONNECTION;
+        return;
+      }
   }
 }
 
 
 void parseATText(byte b) {
-
+  Serial.print(char(b));
   buffer[pos++] = b;
 
   if ( pos >= sizeof(buffer) )
@@ -75,6 +84,7 @@ void parseATText(byte b) {
 
   case PS_IGNORING_COMMAND_ECHO:
     {
+//      Serial.println("PS_IGNORING_COMMAND_ECHO");
       if ( b == '\n' ) {
         parseState = PS_DETECT_MSG_TYPE;
         resetBuffer();
@@ -84,6 +94,7 @@ void parseATText(byte b) {
 
   case PS_HTTPACTION_TYPE:
     {
+//      Serial.println("PS_HTTPACTION_TYPE");
       if ( b == ',' ) {
         parseState = PS_HTTPACTION_RESULT;
         status_code = "";
@@ -94,6 +105,7 @@ void parseATText(byte b) {
 
   case PS_HTTPACTION_RESULT:
     {
+//      Serial.println("PS_HTTPACTION_RESULT");
       if ( b == ',' ) {
         parseState = PS_HTTPACTION_LENGTH;
         resetBuffer();
@@ -106,9 +118,13 @@ void parseATText(byte b) {
 
   case PS_HTTPACTION_LENGTH:
     {
+//      Serial.println("PS_HTTPACTION_LENGTH");
       if ( b == '\n' ) {
         // now request content
+        
+
         GSM.print("AT+HTTPREAD=0,");
+        
         GSM.println(buffer);
         
         parseState = PS_DETECT_MSG_TYPE;
@@ -119,6 +135,7 @@ void parseATText(byte b) {
 
   case PS_HTTPREAD_LENGTH:
     {
+//      Serial.println("PS_HTTPREAD_LENGTH");
       if ( b == '\n' ) {
         contentLength = atoi(buffer);
         parseState = PS_HTTPREAD_CONTENT;
@@ -129,8 +146,9 @@ void parseATText(byte b) {
 
   case PS_HTTPREAD_CONTENT:
     {
+//      Serial.println("PS_HTTPREAD_CONTENT");
       // for this demo I'm just showing the content bytes in the serial monitor
-      Serial.write(b);
+//      Serial.write(b);
       response += char(b);
       contentLength--;
       

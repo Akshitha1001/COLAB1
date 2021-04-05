@@ -3,9 +3,12 @@
 void GET_request(float);
 void POST_request(float);
 
+
+
 void make_GET_request(float depth,JsonDocument& doc) {
 
   if(actionState != AS_IDLE) return;
+  
   GET_request(depth);
   if(actionState != AS_RECEIVED_RESPONSE) return;
   
@@ -13,13 +16,16 @@ void make_GET_request(float depth,JsonDocument& doc) {
     actionState = AS_IDLE;
     return;
   }
+  
 }
 
 void make_POST_request(float depth,JsonDocument& doc) {
   
-  while(actionState != AS_IDLE);
+  if(actionState != AS_IDLE) return;
+  
   POST_request(depth);
-  while(actionState != AS_RECEIVED_RESPONSE);
+  if(actionState != AS_RECEIVED_RESPONSE) return;
+  
   if(actionState == AS_RECEIVED_RESPONSE) {
     actionState = AS_IDLE;
     return;

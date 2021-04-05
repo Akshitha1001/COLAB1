@@ -25,6 +25,7 @@ void setup()
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
   pinMode(relayPin, OUTPUT);
+  digitalWrite(resetPin,HIGH);
   char comand[50];
   String cmd = "AT+SAPBR=3,1,\"APN\",\"" + APN_name + "\"";
   cmd.toCharArray(comand , cmd.length());
@@ -32,36 +33,44 @@ void setup()
   sendGSM("AT+SAPBR=1,1",3000);
   sendGSM("AT+HTTPINIT");  
   sendGSM("AT+HTTPPARA=\"CID\",1");
+  actionState = AS_IDLE;
   Serial.println("Set-up Done");
 }
 
 void loop()
 { 
 // ----- GETTING DEPTH FROM THE SENSOR -------------------
-    depth = findDepth();
+//    depth = findDepth();
+    depth = 10; // testing line
     Serial.println("Depth : "+String(depth));
     
 //  ----- SENDING DATA TO SERVER VIA GET REQUEST ---------
 //  ------ FOR GET METHOD ----
 
-//    make_GET_request(depth,doc);
+    make_GET_request(depth,doc);
   
 //  ------ FOR POST METHOD ----
 
-    make_POST_request(depth,doc);
+//     make_POST_request(depth,doc);
+
+
+    
+
 
 //  ------ CONVERTING TO JSON ----   
     deserializeJson(doc, response_arr);
 
 //   ----- CHANGING RELAY STATE USING RESPONSE ---------
-      if(doc["status_code"]!=200) {
-          Serial.println("Some Error Occured");
-//        handle_error();
+      if(actionState == AS_LOST_CONNECTION){
+        Serial.println("Some Error Occured , Resetting");
+        setup();
       }
-      else {
-            swi = int(doc["switch"]);
-            turn_bulb(swi);    
+      else if(doc["status_code"]==200  ) {
+        swi = int(doc["switch"]);
+        turn_bulb(swi);  
+          
       }
+      
     Serial.print("Level of motor : " + String(depth) + " and switch is " + String(digitalRead(relayPin)));
     Serial.println("\n\n\n");
     delay(5000);
