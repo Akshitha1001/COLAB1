@@ -18,7 +18,7 @@ int pumpPin = 12;
 #define NUM_OF_TANKS     3
 #define NUM_ACTIVE_TANKS 3
 int      pipePins[NUM_OF_TANKS] = {9, 10, 11};
-int floatSwitches[NUM_OF_TANKS] = {3,  4,  5};
+int floatSwitches[NUM_OF_TANKS] = {3,  4,  5}; // change to array_size to NUM_ACTIVE_TANKS
 
 char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
