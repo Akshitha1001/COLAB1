@@ -139,13 +139,13 @@ void motor_off() {
   Serial.print("TURNED MOTOR OFF"); 
 }
 
-#define 3_4_INCH_FLOW_SENSOR
-#ifdef  3_4_INCH_FLOW_SENSOR
+#define SZ_3_4_INCH_FLOW_SENSOR
+#ifdef  SZ_3_4_INCH_FLOW_SENSOR
 // Pulse frequency (Hz) = 11.5Q, Q is flow rate in L/min for .75 inch sensor
 #define FLOW_RATE_PER_MIN 11.5 //for .75 inch sensor
 #endif
 
-#ifdef  1_2_INCH_FLOW_SENSOR
+#ifdef  SZ_1_2_INCH_FLOW_SENSOR
 // Pulse frequency (Hz) =  7.5Q, Q is flow rate in L/min for .50 inch sensor
 #define FLOW_RATE_PER_MIN  7.5 //for .50 inch sensor
 #endif
