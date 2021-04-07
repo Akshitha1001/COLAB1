@@ -205,6 +205,7 @@ void loop() {
         continue;
       }
       motor_on(tank);
+      return;
     }
     // all tanks are full
     motor_off();
