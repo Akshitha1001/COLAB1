@@ -66,7 +66,7 @@ void setup() {
 
   // initialize digital pump pin as an output.
    pinMode(     pumpPin, OUTPUT); // motor on/off relay
-   digitalWrite(pumpPin, LOW);// MOTOR OFF  // before it was low
+   digitalWrite(pumpPin, MOTOROFF);
    delay(1000);
 
    for (tank = 0; tank < NUM_OF_TANKS; tank++) {
