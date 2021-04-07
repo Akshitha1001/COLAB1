@@ -18,7 +18,7 @@ int pumpPin = 12;
 #define NUM_OF_TANKS     3
 #define NUM_ACTIVE_TANKS 3
 int      pipePins[NUM_OF_TANKS] = {9, 10, 11};
-int floatSwitches[NUM_OF_TANKS] = {3,  4,  5}; // change to array_size to NUM_ACTIVE_TANKS
+int floatSwitches[NUM_ACTIVE_TANKS] = {3,  4,  5}; // before this was [NUM_OF_TANKS]
 
 char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
@@ -109,6 +109,7 @@ void motor_on(int tank) {
   if (motor_state == MOTORON) {
     //  motor is already on checking for water flow
     if (lph < LPH_MIN) {
+      Serial.print("LPH ");
       Serial.println(lph);
       return;
       //  motor_off();
@@ -117,7 +118,7 @@ void motor_on(int tank) {
     }
     return;
   }
-  // switching on motor 
+  // switching on motor
   motor_state = MOTORON;
   reset_flowrate();
   digitalWrite(pumpPin, MOTORON);
@@ -138,14 +139,24 @@ void motor_off() {
   Serial.print("TURNED MOTOR OFF"); 
 }
 
+#define 3_4_INCH_FLOW_SENSOR
+#ifdef  3_4_INCH_FLOW_SENSOR
+// Pulse frequency (Hz) = 11.5Q, Q is flow rate in L/min for .75 inch sensor
+#define FLOW_RATE_PER_MIN 11.5 //for .75 inch sensor
+#endif
+
+#ifdef  1_2_INCH_FLOW_SENSOR
+// Pulse frequency (Hz) =  7.5Q, Q is flow rate in L/min for .50 inch sensor
+#define FLOW_RATE_PER_MIN  7.5 //for .50 inch sensor
+#endif
+
 void calc_lph() {
   currentTime = millis();
   // Every second, calculate and print litres/hour
   if (currentTime >= (cloopTime + LPH_MOTOR_CHECK_WAIT_TIME)) { 
     cloopTime      = currentTime; // Updates cloopTime
-    // Pulse frequency (Hz) = 7.5Q, Q is flow rate in L/min.
-    // (Pulse frequency x 60 min) / 7.5Q = flowrate in L/hour --- is for .5 inch sensor
-    lph            = (flow_frequency * 60 / 7.5) / (LPH_MOTOR_CHECK_WAIT_TIME/1000);
+    // (Pulse frequency x 60 min) / FLOW_RATE_PER_MIN = flowrate in L/hour
+    lph            = (flow_frequency * 60 / FLOW_RATE_PER_MIN) / (LPH_MOTOR_CHECK_WAIT_TIME/1000);
     flow_frequency = 0;           // Reset Counter
     Serial.print(lph, DEC);       // Print litres/hour
     Serial.println(" L/hour");
@@ -177,7 +188,7 @@ void loop() {
 
 // This is for over head tanks
     int now_hour = now.hour();
-    if ((now_hour >= 7 && now_hour <= 9) ||  (now_hour >= 19 && now_hour <= 21)) {
+    if ((now_hour < 22) && (now_hour >= 6)) {
       // when no water in pipe
       motor_off();
       delay(MUNI_OFF_HOURS_WAIT_TIME);
@@ -193,12 +204,7 @@ void loop() {
         Serial.println(" full");
         continue;
       }
-      if ((now_hour >= 22 && now_hour <= 23) ||  (now_hour >= 0 && now_hour <= 5)) {
-        motor_on(tank);
-        return;
-      }
-      motor_off();
-      return;
+      motor_on(tank);
     }
     // all tanks are full
     motor_off();
