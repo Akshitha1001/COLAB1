@@ -112,9 +112,6 @@ void waitForSerialPortConnection(){
     #endif  
 }
 
-
-
-
 void reset_flowrate() {
   currentTime = millis();
   cloopTime   = currentTime;
@@ -135,19 +132,19 @@ void motor_on(int tank,int isTesting = 0) {
   }
   delay(1000);
  
-  if(!isTesting){
+  if (!isTesting) {
     if (motor_state == MOTORON) {
-    //  motor is already on checking for water flow
-    if (lph < LPH_MIN) {
-      Serial.print("LPH ");
-      Serial.println(lph);
-      return;
-      //  motor_off();
-      delay(MUNI_NO_WATER_WAIT_TIME);
-      Serial.print("Woke up from no muni water ");
-    }
+      //  motor is already on checking for water flow
+      if (lph < LPH_MIN) {
+        Serial.print("LPH ");
+        Serial.println(lph);
+        return;
+        //  motor_off();
+        delay(MUNI_NO_WATER_WAIT_TIME);
+        Serial.print("Woke up from no muni water ");
+      }
     return;
-  }
+    }
   }
   // switching on motor
   motor_state = MOTORON;
@@ -156,6 +153,7 @@ void motor_on(int tank,int isTesting = 0) {
   Serial.print("Time for filling up Tank ");
   return;
 }
+
 void motor_off() {
   int tank;
   motor_state = MOTOROFF;
@@ -201,7 +199,6 @@ void autoSwitchOverheadTanks(){
     }
 }
 
-
 void analyzeTanks(int isTesting=0){
     int tank;
     int ts;
@@ -213,7 +210,7 @@ void analyzeTanks(int isTesting=0){
         Serial.println(" full");
         continue;
       }
-      motor_on(tank,isTesting);
+      motor_on(tank, isTesting);
       return;
     }
     // all tanks are full
@@ -221,13 +218,6 @@ void analyzeTanks(int isTesting=0){
     delay(TANKS_FULL_WAIT_TIME);
     return;
 }
-
-
-
-
-
- 
-
 
 void calc_lph() {
   currentTime = millis();
