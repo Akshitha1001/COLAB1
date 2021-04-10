@@ -60,12 +60,18 @@ unsigned char flowsensor = 2; // Sensor Input
 unsigned long currentTime;
 unsigned long cloopTime;
 
+void flow () // Interrupt function
+{
+   flow_frequency++;
+}
+
 
 void setupFlowSensor(){
      //Serial.begin(57600);
    pinMode(     flowsensor, INPUT);
    digitalWrite(flowsensor, HIGH); // Optional Internal Pull-Up  before it was high
    Serial.begin(9600);
+   
    attachInterrupt(digitalPinToInterrupt(flowsensor), flow, RISING); // Setup Interrupt
 }
 
@@ -107,67 +113,13 @@ void waitForSerialPortConnection(){
 }
 
 
-void flow () // Interrupt function
-{
-   flow_frequency++;
-}
+
 
 void reset_flowrate() {
   currentTime = millis();
   cloopTime   = currentTime;
   lph      = LPH_MIN;
 }
-
-void printTimeStamp(){
-    DateTime now = rtc.now();
-
-    Serial.print(now.year(), DEC);
-    Serial.print('/');
-    Serial.print(now.month(), DEC);
-    Serial.print('/');
-    Serial.print(now.day(), DEC);
-    Serial.print(" (");
-    Serial.print(daysOfTheWeek[now.dayOfTheWeek()]);
-    Serial.print(") ");
-    Serial.print(now.hour(), DEC);
-    Serial.print(':');
-    Serial.print(now.minute(), DEC);
-    Serial.print(':');
-    Serial.print(now.second(), DEC);
-    Serial.println();
-}
-
-void autoSwitchOverheadTanks(){
-    // This is for over head tanks
-    int now_hour = now.hour();
-    if ((now_hour < 22) && (now_hour >= 6)) {
-      // when no water in pipe
-      motor_off();
-      delay(MUNI_OFF_HOURS_WAIT_TIME);
-      return;
-    }
-}
-
-void analyzeTanks(int isTesting=0){
-    int tank;
-    int ts;
-    for (tank = 0; tank < NUM_ACTIVE_TANKS; tank++) {
-      Serial.print("Tank ");
-      Serial.print(tank, DEC);
-      ts = digitalRead(floatSwitches[tank]);
-      if (ts == HIGH) {
-        Serial.println(" full");
-        continue;
-      }
-      motor_on(tank,isTesting);
-      return;
-    }
-    // all tanks are full
-    motor_off();
-    delay(TANKS_FULL_WAIT_TIME);
-    return;
-}
-
 
 int motor_state = MOTOROFF;
 void motor_on(int tank,int isTesting = 0) {
@@ -204,9 +156,6 @@ void motor_on(int tank,int isTesting = 0) {
   Serial.print("Time for filling up Tank ");
   return;
 }
-
-
- 
 void motor_off() {
   int tank;
   motor_state = MOTOROFF;
@@ -220,6 +169,64 @@ void motor_off() {
   Serial.print("TURNED MOTOR OFF"); 
 }
 
+
+void printTimeStamp(){
+    DateTime now = rtc.now();
+
+    Serial.print(now.year(), DEC);
+    Serial.print('/');
+    Serial.print(now.month(), DEC);
+    Serial.print('/');
+    Serial.print(now.day(), DEC);
+    Serial.print(" (");
+    Serial.print(daysOfTheWeek[now.dayOfTheWeek()]);
+    Serial.print(") ");
+    Serial.print(now.hour(), DEC);
+    Serial.print(':');
+    Serial.print(now.minute(), DEC);
+    Serial.print(':');
+    Serial.print(now.second(), DEC);
+    Serial.println();
+}
+
+void autoSwitchOverheadTanks(){
+    // This is for over head tanks
+    DateTime now = rtc.now();
+    int now_hour = now.hour();
+    if ((now_hour < 22) && (now_hour >= 6)) {
+      // when no water in pipe
+      motor_off();
+      delay(MUNI_OFF_HOURS_WAIT_TIME);
+      return;
+    }
+}
+
+
+void analyzeTanks(int isTesting=0){
+    int tank;
+    int ts;
+    for (tank = 0; tank < NUM_ACTIVE_TANKS; tank++) {
+      Serial.print("Tank ");
+      Serial.print(tank, DEC);
+      ts = digitalRead(floatSwitches[tank]);
+      if (ts == HIGH) {
+        Serial.println(" full");
+        continue;
+      }
+      motor_on(tank,isTesting);
+      return;
+    }
+    // all tanks are full
+    motor_off();
+    delay(TANKS_FULL_WAIT_TIME);
+    return;
+}
+
+
+
+
+
+ 
 
 
 void calc_lph() {
