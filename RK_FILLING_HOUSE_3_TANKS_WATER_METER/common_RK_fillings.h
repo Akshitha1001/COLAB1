@@ -187,7 +187,7 @@ void printTimeStamp(){
     Serial.println();
 }
 
-void autoSwitchOverheadTanks(){
+bool isMuniWaterTime(){
     // This is for over head tanks
     DateTime now = rtc.now();
     int now_hour = now.hour();
@@ -195,8 +195,9 @@ void autoSwitchOverheadTanks(){
       // when no water in pipe
       motor_off();
       delay(MUNI_OFF_HOURS_WAIT_TIME);
-      return;
+      return false;
     }
+    return true;
 }
 
 void analyzeTanks(int isTesting=0){

@@ -1,11 +1,8 @@
-
- #include "common_RK_fillings.h"
+#include "common_RK_fillings.h"
 
 
 void setup() {
-    
     setupFlowSensor();
-
     sei(); // Enable interrupts
     reset_flowrate();
 
@@ -16,9 +13,7 @@ void setup() {
     
     checkRTC();
     checkRTCPowerStatus();
-
 }
-
 
 
 void loop() {
@@ -26,7 +21,9 @@ void loop() {
   calc_lph();
   printTimeStamp();
 
-  autoSwitchOverheadTanks();
-
-  analyzeTanks();
+  bool isWaterTime;
+  isWaterTime = isMuniWaterTime()
+  if (isWaterTime) {
+    analyzeTanks();
+  }
 }
