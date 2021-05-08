@@ -1,45 +1,45 @@
 #include <AUnit.h>
-
 #include "common_RK_fillings.h"
 
 
 test(setupFlowSensor) {
-  assertEqual(setupFlowSensor(), HIGH);
+  assertEqual(flowsensor, HIGH);
 }
 
 test(intializeDigitalPumpPin) {
-  assertEqual(intializeDigitalPumpPin(), MOTOROFF);
+  assertEqual(pumpPin, MOTOROFF);
 }
 
 test(intializeTanks) {
-  int tanksMode[] = {PIPEOFF, PIPEOFF, PIPEOFF};
-  assertEqual(initializeTanks, tanksMode);
-}
-
-test(isMuniWaterTime) {
-  assertEqual(isMuniWaterTime(), true);
+  for (int tank = 0; tank < NUM_OF_TANKS; tank++) {
+    assertEqual(pipePins[tank], PIPEOFF);
+  }
 }
 
 test(analyzeTanks) {
-  int tanksMode[] = {PIPEOFF, PIPEOFF, PIPEOFF};
-  assertEqual(analyzeTanks(), tanksMode);
-
-}
-
-test(motor_off) {
-  int pumpMode[] = {PIPEOFF, PIPEOFF, PIPEOFF};
-  assertEqual(motor_off(), pumpMode);
-}
-
-test(motor_on) {
-  int pumpMode[] = {PIPEON, PIPEON, PIPEON};
-  assertEqual(motor_off(), pumpMode);
-}
-
-test(tanks) {
-  for (int tank = 0; tank < NUM_OF_TANKS; tank++) {
-    assertEqual(pipePins[tank], PIPEOFF);
-    assertEqual(pipePins[tank], PIPEON);
+  if (isMunicipalWaterTime()) 
+  {
+    if (pipePins[0] == PIPEON)
+    {
+      assertEqual(pipePins[1], PIPEOFF);
+      assertEqual(pipePins[2], PIPEOFF);
+    }
+    else if (pipePins[1] == PIPEON)
+    {
+      assertEqual(pipePins[0], PIPEOFF);
+      assertEqual(pipePins[2], PIPEOFF);
+    }
+    else if (pipePins[2] == PIPEON)
+    {
+      assertEqual(pipePins[0], PIPEOFF);
+      assertEqual(pipePins[1], PIPEOFF);
+    }
+  }
+  else
+  {
+    assertEqual(floatSwitches[0], PIPEOFF);
+    assertEqual(floatSwitches[1], PIPEOFF);
+    assertEqual(floatSwitches[2], PIPEOFF);
   }
 }
 
@@ -69,8 +69,7 @@ void loop() {
   calc_lph();
   printTimeStamp();
 
-  bool isWaterTime;
-  isWaterTime = isMuniWaterTime();
+  bool isWaterTime = isMunicipalWaterTime();
   if (isWaterTime) {
     analyzeTanks();
   }
