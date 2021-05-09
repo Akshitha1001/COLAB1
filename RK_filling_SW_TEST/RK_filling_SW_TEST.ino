@@ -17,30 +17,28 @@ test(intializeTanks) {
 }
 
 test(analyzeTanks) {
-  if (isMunicipalWaterTime()) 
-  {
-    if (pipePins[0] == PIPEON)
-    {
-      assertEqual(pipePins[1], PIPEOFF);
-      assertEqual(pipePins[2], PIPEOFF);
-    }
-    else if (pipePins[1] == PIPEON)
-    {
-      assertEqual(pipePins[0], PIPEOFF);
-      assertEqual(pipePins[2], PIPEOFF);
-    }
-    else if (pipePins[2] == PIPEON)
-    {
-      assertEqual(pipePins[0], PIPEOFF);
-      assertEqual(pipePins[1], PIPEOFF);
-    }
+  if (!isMunicipalWaterTime()) {
+    return;
   }
-  else
-  {
-    assertEqual(floatSwitches[0], PIPEOFF);
-    assertEqual(floatSwitches[1], PIPEOFF);
-    assertEqual(floatSwitches[2], PIPEOFF);
+  if (pipePins[0] == PIPEON) {
+    assertEqual(pipePins[1], PIPEOFF);
+    assertEqual(pipePins[2], PIPEOFF);
+    return;
   }
+  if (pipePins[1] == PIPEON) {
+    assertEqual(pipePins[0], PIPEOFF);
+    assertEqual(pipePins[2], PIPEOFF);
+    return;
+  }
+  if (pipePins[2] == PIPEON) {
+    assertEqual(pipePins[0], PIPEOFF);
+    assertEqual(pipePins[1], PIPEOFF);
+    return;
+  }
+
+  assertEqual(floatSwitches[0], PIPEOFF);
+  assertEqual(floatSwitches[1], PIPEOFF);
+  assertEqual(floatSwitches[2], PIPEOFF);
 }
 
 
