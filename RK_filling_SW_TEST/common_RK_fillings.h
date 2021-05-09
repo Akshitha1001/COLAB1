@@ -230,9 +230,8 @@ void analyzeTanks(int isTesting = 0) {
     if (ts == HIGH) {
       Serial.println(" is full");
       continue;
-    } else {
-      Serial.println();
     }
+    Serial.println();
 
     motor_on(tank, isTesting);
     return;
