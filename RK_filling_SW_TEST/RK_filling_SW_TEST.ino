@@ -18,6 +18,9 @@ test(intializeTanks) {
 
 test(analyzeTanks) {
   if (!isMunicipalWaterTime()) {
+    assertEqual(floatSwitches[0], PIPEOFF);
+    assertEqual(floatSwitches[1], PIPEOFF);
+    assertEqual(floatSwitches[2], PIPEOFF);
     return;
   }
   if (pipePins[0] == PIPEON) {
@@ -35,10 +38,6 @@ test(analyzeTanks) {
     assertEqual(pipePins[1], PIPEOFF);
     return;
   }
-
-  assertEqual(floatSwitches[0], PIPEOFF);
-  assertEqual(floatSwitches[1], PIPEOFF);
-  assertEqual(floatSwitches[2], PIPEOFF);
 }
 
 
