@@ -18,6 +18,7 @@ test(intializeTanks) {
 
 test(analyzeTanks) {
   if (!isMunicipalWaterTime()) {
+<<<<<<< HEAD
     assertEqual(digitalRead(pumpPin),MOTOROFF); 
     
     for (int tank = 0; tank < NUM_OF_TANKS; tank++) {
@@ -76,6 +77,27 @@ test(motor_off){
         assertEqual(digitalRead(pipePins[tank]), PIPEOFF);
       }
       return; 
+=======
+    assertEqual(floatSwitches[0], PIPEOFF);
+    assertEqual(floatSwitches[1], PIPEOFF);
+    assertEqual(floatSwitches[2], PIPEOFF);
+    return;
+  }
+  if (pipePins[0] == PIPEON) {
+    assertEqual(pipePins[1], PIPEOFF);
+    assertEqual(pipePins[2], PIPEOFF);
+    return;
+  }
+  if (pipePins[1] == PIPEON) {
+    assertEqual(pipePins[0], PIPEOFF);
+    assertEqual(pipePins[2], PIPEOFF);
+    return;
+  }
+  if (pipePins[2] == PIPEON) {
+    assertEqual(pipePins[0], PIPEOFF);
+    assertEqual(pipePins[1], PIPEOFF);
+    return;
+>>>>>>> 6bc7458b868559fec02278f6c99393261fd4b1f0
   }
 }
 

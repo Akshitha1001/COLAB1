@@ -1,3 +1,4 @@
+#include "debug.h"
 #include "RTClib.h"
 
 RTC_DS3231 rtc;
@@ -230,9 +231,8 @@ void analyzeTanks(int isTesting = 0) {
     if (ts == HIGH) {
       Serial.println(" is full");
       continue;
-    } else {
-      Serial.println();
     }
+    Serial.println();
 
     motor_on(tank, isTesting);
     return;
