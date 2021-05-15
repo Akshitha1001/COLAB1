@@ -1,11 +1,12 @@
+#ifdef TEST
 #include "debug.h"
-#include "RTClib.h"
 
-RTC_DS3231 rtc;
+#else
+
+#include "common_RTC.h"
+#endif
+
 int pumpPin = 12;
-
-char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-
 //#define NORMALLY_OPEN // to make them close
 #ifdef  NORMALLY_OPEN
 #define PIPEOFF LOW
@@ -22,8 +23,8 @@ char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursd
 #define NUM_ACTIVE_TANKS 3
 
 
-int      pipePins[] = {9, 10, 11};
-int floatSwitches[] = {3,  4,  5}; // before this was [NUM_OF_TANKS]
+int     pipePins[] = {9, 10, 11};
+int floatSensors[] = {3,  4,  5}; // before this was [NUM_OF_TANKS]
 
 //#define DEBUG
 #ifndef DEBUG
@@ -91,28 +92,9 @@ void initializeTanks() {
   for (int tank = 0; tank < NUM_OF_TANKS; tank++) {
     pinMode(     pipePins[tank], OUTPUT);       // SOL-TANK
     digitalWrite(pipePins[tank], PIPEOFF);
-    pinMode(floatSwitches[tank], INPUT_PULLUP); // over head tank sensor
+    pinMode(floatSensors[tank], INPUT_PULLUP); // over head tank sensor
   }
 }
-
-
-void checkRTC() {
-  if (! rtc.begin()) {
-    Serial.println("Couldn't find RTC");
-    Serial.flush();
-    abort();
-  }
-}
-
-
-void checkRTCPowerStatus() {
-  if (rtc.lostPower()) {
-    Serial.println("RTC lost power, let's set the time!");
-
-    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-  }
-}
-
 
 void waitForSerialPortConnection() {
 #ifndef ESP8266
@@ -183,32 +165,8 @@ void motor_off() {
   Serial.println("TURNED MOTOR OFF");
 }
 
-
-void printTimeStamp() {
-  DateTime now = rtc.now();
-
-  Serial.print(now.year(), DEC);
-  Serial.print('/');
-  Serial.print(now.month(), DEC);
-  Serial.print('/');
-  Serial.print(now.day(), DEC);
-  Serial.print(" (");
-  Serial.print(daysOfTheWeek[now.dayOfTheWeek()]);
-  Serial.print(") ");
-  Serial.print(now.hour(), DEC);
-  Serial.print(':');
-  Serial.print(now.minute(), DEC);
-  Serial.print(':');
-  Serial.print(now.second(), DEC);
-  Serial.println();
-}
-
-
-bool isMunicipalWaterTime() {
+bool isMunicipalWaterTime(int now_hour) {
   // This is for over head tanks
-  DateTime now = rtc.now();
-  int now_hour = now.hour();
-
   if ((now_hour < 22) && (now_hour >= 6)) {
     // when no water in pipe
     motor_off();
@@ -216,7 +174,6 @@ bool isMunicipalWaterTime() {
 
     return false;
   }
-
   return true;
 }
 
@@ -227,7 +184,7 @@ void analyzeTanks(int isTesting = 0) {
     Serial.print("Tank ");
     Serial.print(tank, DEC);
 
-    int ts = digitalRead(floatSwitches[tank]);
+    int ts = digitalRead(floatSensors[tank]);
     if (ts == HIGH) {
       Serial.println(" is full");
       continue;
