@@ -46,39 +46,31 @@ test(analyzeTanks) {
 }
 
 test(motor_on){
-  if(digitalReadDebug(pumpPin) == MOTOROFF){
-    if(digitalReadDebug(floatSensors[0]) == LOW){
-      assertEqual(digitalReadDebug(pipePins[0]), PIPEON);
-      assertEqual(digitalReadDebug(pumpPin),MOTORON);
+  motor_on(0);
+  assertEqual(digitalReadDebug(pipePins[0]), PIPEON);
+  assertEqual(digitalReadDebug(pipePins[1]), PIPEOFF);
+  assertEqual(digitalReadDebug(pipePins[2]), PIPEOFF);
+  assertEqual(digitalReadDebug(pumpPin),    MOTORON);
 
-      return;
-    }
-    if(digitalReadDebug(floatSensors[1]) == LOW){
-      assertEqual(digitalReadDebug(pipePins[1]), PIPEON);
-      assertEqual(digitalReadDebug(pumpPin),MOTORON);
+  motor_on(1);
+  assertEqual(digitalReadDebug(pipePins[0]), PIPEOFF);
+  assertEqual(digitalReadDebug(pipePins[1]), PIPEON);
+  assertEqual(digitalReadDebug(pipePins[2]), PIPEOFF);
+  assertEqual(digitalReadDebug(pumpPin),    MOTORON);
 
-      return;
-    }
-    if(digitalReadDebug(floatSensors[2]) == LOW){
-      assertEqual(digitalReadDebug(pipePins[2]), PIPEON);
-      assertEqual(digitalReadDebug(pumpPin),MOTORON);
-
-      return;
-    }
-  }
-  
+  motor_on(2);
+  assertEqual(digitalReadDebug(pipePins[0]), PIPEOFF);
+  assertEqual(digitalReadDebug(pipePins[1]), PIPEOFF);
+  assertEqual(digitalReadDebug(pipePins[2]), PIPEON);
+  assertEqual(digitalReadDebug(pumpPin),    MOTORON);
 }
 
 test(motor_off){
-  if(digitalReadDebug(floatSensors[0]) == LOW
-     && digitalReadDebug(floatSensors[1]) == LOW
-     && digitalReadDebug(floatSensors[2]) == LOW){
-      
-      assertEqual(digitalReadDebug(pumpPin),MOTOROFF);
-      for (int tank = 0; tank < NUM_OF_TANKS; tank++) {
-        assertEqual(digitalReadDebug(pipePins[tank]), PIPEOFF);
-      }
-      return; 
+  motor_off();
+
+  assertEqual(digitalReadDebug(pumpPin),MOTOROFF);
+  for (int tank = 0; tank < NUM_OF_TANKS; tank++) {
+    assertEqual(digitalReadDebug(pipePins[tank]), PIPEOFF);
   }
 }
 
