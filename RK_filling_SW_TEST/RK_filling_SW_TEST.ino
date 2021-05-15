@@ -3,62 +3,65 @@
 
 
 test(setupFlowSensor) {
-  assertEqual(digitalRead(flowsensor), HIGH);
+  setupFlowSensor();
+  assertEqual(digitalReadDebug( flowsensor), HIGH);
 }
 
 test(intializeDigitalPumpPin) {
-  assertEqual(digitalRead(pumpPin), MOTOROFF);
+  intializeDigitalPumpPin();
+  assertEqual(digitalReadDebug( pumpPin), MOTOROFF);
 }
 
 test(intializeTanks) {
+  initializeTanks();
   for (int tank = 0; tank < NUM_OF_TANKS; tank++) {
-    assertEqual(digitalRead(pipePins[tank]), PIPEOFF);
+    assertEqual(digitalReadDebug( pipePins[tank]), PIPEOFF);
   }
 }
 
 test(analyzeTanks) {
   if (!isMunicipalWaterTime()) {
-    assertEqual(digitalRead(pumpPin),MOTOROFF); 
+    assertEqual(digitalReadDebug( pumpPin), MOTOROFF); 
     
     for (int tank = 0; tank < NUM_OF_TANKS; tank++) {
-       assertEqual(digitalRead(pipePins[tank]), PIPEOFF);
+       assertEqual(digitalReadDebug( pipePins[tank]), PIPEOFF);
     }
     return;
   }
-  if (digitalRead(floatSwitches[0]) == LOW) {
-    assertEqual(digitalRead(pipePins[0]),PIPEON); 
-    assertEqual(digitalRead(pumpPin),MOTORON); 
+  if (digitalReadDebug(floatSensors[0]) == LOW) {
+    assertEqual(digitalReadDebug( pipePins[0]), PIPEON); 
+    assertEqual(digitalReadDebug( pumpPin)    , MOTORON); 
     return;
   }
-  if (digitalRead(floatSwitches[1]) == LOW) {
-    assertEqual(digitalRead(pipePins[1]),PIPEON); 
-    assertEqual(digitalRead(pumpPin),MOTORON); 
+  if (digitalReadDebug(floatSensors[1]) == LOW) {
+    assertEqual(digitalReadDebug( pipePins[1]), PIPEON); 
+    assertEqual(digitalReadDebug( pumpPin)    , MOTORON); 
     return;
   }
-  if (digitalRead(floatSwitches[2]) == LOW) {
-    assertEqual(digitalRead(pipePins[2]),PIPEON); 
-    assertEqual(digitalRead(pumpPin),MOTORON);  
+  if (digitalReadDebug(floatSensors[2]) == LOW) {
+    assertEqual(digitalReadDebug( pipePins[2]), PIPEON); 
+    assertEqual(digitalReadDebug( pumpPin)    , MOTORON);  
     return;
   }
 }
 
 test(motor_on){
-  if(digitalRead(pumpPin) == MOTOROFF){
-    if(digitalRead(floatSwitches[0]) == LOW){
-      assertEqual(digitalRead(pipePins[0]), PIPEON);
-      assertEqual(digitalRead(pumpPin),MOTORON);
+  if(digitalReadDebug(pumpPin) == MOTOROFF){
+    if(digitalReadDebug(floatSensors[0]) == LOW){
+      assertEqual(digitalReadDebug(pipePins[0]), PIPEON);
+      assertEqual(digitalReadDebug(pumpPin),MOTORON);
 
       return;
     }
-    if(digitalRead(floatSwitches[1]) == LOW){
-      assertEqual(digitalRead(pipePins[1]), PIPEON);
-      assertEqual(digitalRead(pumpPin),MOTORON);
+    if(digitalReadDebug(floatSensors[1]) == LOW){
+      assertEqual(digitalReadDebug(pipePins[1]), PIPEON);
+      assertEqual(digitalReadDebug(pumpPin),MOTORON);
 
       return;
     }
-    if(digitalRead(floatSwitches[2]) == LOW){
-      assertEqual(digitalRead(pipePins[2]), PIPEON);
-      assertEqual(digitalRead(pumpPin),MOTORON);
+    if(digitalReadDebug(floatSensors[2]) == LOW){
+      assertEqual(digitalReadDebug(pipePins[2]), PIPEON);
+      assertEqual(digitalReadDebug(pumpPin),MOTORON);
 
       return;
     }
@@ -67,13 +70,13 @@ test(motor_on){
 }
 
 test(motor_off){
-  if(digitalRead(floatSwitches[0]) == LOW
-     && digitalRead(floatSwitches[1]) == LOW
-     && digitalRead(floatSwitches[2]) == LOW){
+  if(digitalReadDebug(floatSensors[0]) == LOW
+     && digitalReadDebug(floatSensors[1]) == LOW
+     && digitalReadDebug(floatSensors[2]) == LOW){
       
-      assertEqual(digitalRead(pumpPin),MOTOROFF);
+      assertEqual(digitalReadDebug(pumpPin),MOTOROFF);
       for (int tank = 0; tank < NUM_OF_TANKS; tank++) {
-        assertEqual(digitalRead(pipePins[tank]), PIPEOFF);
+        assertEqual(digitalReadDebug(pipePins[tank]), PIPEOFF);
       }
       return; 
   }
@@ -82,13 +85,10 @@ test(motor_off){
 
 void setup() {
 
-  setupFlowSensor();
 
   sei(); // Enable interrupts
   reset_flowrate();
 
-  intializeDigitalPumpPin();
-  initializeTanks();
 
   waitForSerialPortConnection();
 
