@@ -3,43 +3,79 @@
 
 
 test(setupFlowSensor) {
-  assertEqual(flowsensor, HIGH);
+  assertEqual(digitalRead(flowsensor), HIGH);
 }
 
 test(intializeDigitalPumpPin) {
-  assertEqual(pumpPin, MOTOROFF);
+  assertEqual(digitalRead(pumpPin), MOTOROFF);
 }
 
 test(intializeTanks) {
   for (int tank = 0; tank < NUM_OF_TANKS; tank++) {
-    assertEqual(pipePins[tank], PIPEOFF);
+    assertEqual(digitalRead(pipePins[tank]), PIPEOFF);
   }
 }
 
 test(analyzeTanks) {
-  if (isMunicipalWaterTime()) 
-  {
-    if (pipePins[0] == PIPEON)
-    {
-      assertEqual(pipePins[1], PIPEOFF);
-      assertEqual(pipePins[2], PIPEOFF);
+  if (!isMunicipalWaterTime()) {
+    assertEqual(digitalRead(pumpPin),MOTOROFF); 
+    
+    for (int tank = 0; tank < NUM_OF_TANKS; tank++) {
+       assertEqual(digitalRead(pipePins[tank]), PIPEOFF);
     }
-    else if (pipePins[1] == PIPEON)
-    {
-      assertEqual(pipePins[0], PIPEOFF);
-      assertEqual(pipePins[2], PIPEOFF);
+    return;
+  }
+  if (digitalRead(floatSwitches[0]) == LOW) {
+    assertEqual(digitalRead(pipePins[0]),PIPEON); 
+    assertEqual(digitalRead(pumpPin),MOTORON); 
+    return;
+  }
+  if (digitalRead(floatSwitches[1]) == LOW) {
+    assertEqual(digitalRead(pipePins[1]),PIPEON); 
+    assertEqual(digitalRead(pumpPin),MOTORON); 
+    return;
+  }
+  if (digitalRead(floatSwitches[2]) == LOW) {
+    assertEqual(digitalRead(pipePins[2]),PIPEON); 
+    assertEqual(digitalRead(pumpPin),MOTORON);  
+    return;
+  }
+}
+
+test(motor_on){
+  if(digitalRead(pumpPin) == MOTOROFF){
+    if(digitalRead(floatSwitches[0]) == LOW){
+      assertEqual(digitalRead(pipePins[0]), PIPEON);
+      assertEqual(digitalRead(pumpPin),MOTORON);
+
+      return;
     }
-    else if (pipePins[2] == PIPEON)
-    {
-      assertEqual(pipePins[0], PIPEOFF);
-      assertEqual(pipePins[1], PIPEOFF);
+    if(digitalRead(floatSwitches[1]) == LOW){
+      assertEqual(digitalRead(pipePins[1]), PIPEON);
+      assertEqual(digitalRead(pumpPin),MOTORON);
+
+      return;
+    }
+    if(digitalRead(floatSwitches[2]) == LOW){
+      assertEqual(digitalRead(pipePins[2]), PIPEON);
+      assertEqual(digitalRead(pumpPin),MOTORON);
+
+      return;
     }
   }
-  else
-  {
-    assertEqual(floatSwitches[0], PIPEOFF);
-    assertEqual(floatSwitches[1], PIPEOFF);
-    assertEqual(floatSwitches[2], PIPEOFF);
+  
+}
+
+test(motor_off){
+  if(digitalRead(floatSwitches[0]) == LOW
+     && digitalRead(floatSwitches[1]) == LOW
+     && digitalRead(floatSwitches[2]) == LOW){
+      
+      assertEqual(digitalRead(pumpPin),MOTOROFF);
+      for (int tank = 0; tank < NUM_OF_TANKS; tank++) {
+        assertEqual(digitalRead(pipePins[tank]), PIPEOFF);
+      }
+      return; 
   }
 }
 
