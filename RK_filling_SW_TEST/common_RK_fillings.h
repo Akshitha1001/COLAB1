@@ -7,16 +7,16 @@
 #endif
 
 int pumpPin = 12;
-//#define NORMALLY_OPEN // to make them close
+//#define NORMALLY_OPEN // is it normally open solenoid?
 #ifdef  NORMALLY_OPEN
-#define PIPEOFF LOW
-#define PIPEON HIGH
+  #define PIPEOFF  LOW
+  #define PIPEON  HIGH
 #else
-#define PIPEOFF HIGH
-#define PIPEON  LOW
+  #define PIPEOFF HIGH
+  #define PIPEON   LOW
 #endif
 
-#define MOTORON   LOW
+#define MOTORON    LOW
 #define MOTOROFF  HIGH
 
 #define NUM_OF_TANKS     3
@@ -62,8 +62,6 @@ unsigned char flowsensor = 2; // Sensor Input
 unsigned long currentTime;
 unsigned long cloopTime;
 
-
-
 void flow () // Interrupt function
 {
   flow_frequency++;
@@ -79,14 +77,12 @@ void setupFlowSensor() {
   attachInterrupt(digitalPinToInterrupt(flowsensor), flow, RISING); // Setup Interrupt
 }
 
-
 void intializeDigitalPumpPin() {
   // initialize digital pump pin as an output.
   pinMode(     pumpPin, OUTPUT); // motor on/off relay
   digitalWrite(pumpPin, MOTOROFF);
   delay(1000);
 }
-
 
 void initializeTanks() {
   for (int tank = 0; tank < NUM_OF_TANKS; tank++) {
@@ -102,13 +98,11 @@ void waitForSerialPortConnection() {
 #endif
 }
 
-
 void reset_flowrate() {
   currentTime = millis();
   cloopTime   = currentTime;
-  lph      = LPH_MIN;
+  lph         = LPH_MIN;
 }
-
 
 int motor_state = MOTOROFF;
 void motor_on(int tank, int isTesting = 0) {
@@ -125,15 +119,12 @@ void motor_on(int tank, int isTesting = 0) {
   delay(1000);
 
   if (!isTesting) {
-
     if (motor_state == MOTORON) {
       //  motor is already on checking for water flow
       if (lph < LPH_MIN) {
-
         Serial.print("LPH ");
         Serial.println(lph);
         return;
-
         //  motor_off();
         delay(MUNI_NO_WATER_WAIT_TIME);
         Serial.println("Woke up from no municipal water");
@@ -147,10 +138,8 @@ void motor_on(int tank, int isTesting = 0) {
   reset_flowrate();
   digitalWrite(pumpPin, MOTORON);
   Serial.print("Time for filling up Tank");
-
   return;
 }
-
 
 void motor_off() {
 
@@ -177,7 +166,6 @@ bool isMunicipalWaterTime(int now_hour) {
   return true;
 }
 
-
 void analyzeTanks(int isTesting = 0) {
 
   for (int tank = 0; tank < NUM_ACTIVE_TANKS; tank++) {
@@ -198,10 +186,8 @@ void analyzeTanks(int isTesting = 0) {
   // all tanks are full
   motor_off();
   delay(TANKS_FULL_WAIT_TIME);
-
   return;
 }
-
 
 void calc_lph() {
   currentTime = millis();
