@@ -53,7 +53,8 @@ void checkGSM() {
 
 
 void parseATText(byte b) {
-  Serial.print(char(b));
+  if(test)
+    Serial.print(char(b));
   buffer[pos++] = b;
 
   if ( pos >= sizeof(buffer) )
