@@ -28,14 +28,15 @@ void setup()
   pinMode(echoPin, INPUT);
   pinMode(relayPin, OUTPUT);
   digitalWrite(resetPin,HIGH);
-  char comand[50];
-  String cmd = "AT+SAPBR=3,1,\"APN\",\"" + APN_name + "\"";   // Setup APN name of GSM code
-  cmd.toCharArray(comand , cmd.length());
-  sendGSM(comand);  
-  sendGSM("AT+SAPBR=1,1",3000);
-  sendGSM("AT+HTTPINIT");                                     // Turn on mobile data
-  sendGSM("AT+HTTPPARA=\"CID\",1");
-  actionState = AS_IDLE;                                      // actionState is user-defined datatype enum
+//  char comand[50];
+//  String cmd = "AT+SAPBR=3,1,\"APN\",\"" + APN_name + "\"";   // Setup APN name of GSM code
+//  cmd.toCharArray(comand , cmd.length());
+//  sendGSM(comand);  
+//  sendGSM("AT+SAPBR=1,1",3000);
+//  sendGSM("AT+HTTPINIT");                                     // Turn on mobile data
+//  sendGSM("AT+HTTPPARA=\"CID\",1");
+//  actionState = AS_IDLE;                                      // actionState is user-defined datatype enum
+  set_up_GSM();
   Serial.println("Set-up Done");
 }
 
