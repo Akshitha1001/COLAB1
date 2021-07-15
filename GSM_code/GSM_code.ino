@@ -1,24 +1,22 @@
 #include <SoftwareSerial.h>
 #include <ArduinoJson.h>
 #include "pins.h"
-#include "setup.h"
-//
-SoftwareSerial GSM(recevier, transferer); // RX-pin7, TX-pin8
-  // GSM cmds parser
 
-#include "helpers.h"  
+SoftwareSerial GSM(recevier, transferer); // RX-pin7, TX-pin8
+  
+#include "helpers.h"    // GSM cmds parser
 #include "requests.h"   // Functions for GET & POST
 #include "hcsr04.h"     // HCSR04 sensor code
 #include "relay.h"      // Relay Switch code
 
-String APN_name = "bsnlnet";               // change the APN name as per the SIM card
+String APN_name = "bsnlnet";                            // change the APN name as per the SIM card
 
-bool test=true;
-int swi = -1,time_unit=1000;                           //units of time to delay
+bool test=true, alt = true;
+int swi = -1,time_unit=1000;                            //units of time to delay
 float depth;
 unsigned int wait = 2;
 const size_t capacity = JSON_OBJECT_SIZE(1) + 30;
-DynamicJsonDocument doc(capacity);                // JSON datatype to store response from server
+DynamicJsonDocument doc(capacity);                      // JSON datatype to store response from server
 
 
 void setup()
@@ -46,14 +44,18 @@ void loop()
 { 
 // ----- GETTING DEPTH FROM THE SENSOR -------------------
     if(test){
-      depth = 10;
-      test = false;
+      if(alt){
+        depth = 10;
+        alt = false;
+      }
+      else{
+        depth = 2;
+        alt = true;
+      }
     }
-     else{
-      depth = 2;
-      test = true;
-     }
-//      depth = findDepth();                                           
+    else
+      depth = findDepth(); 
+
     Serial.println("Depth : "+String(depth));
     
 //  ----- SENDING DATA TO SERVER VIA GET REQUEST ---------
@@ -64,11 +66,6 @@ void loop()
 //  ------ FOR POST METHOD ----
 
 //     make_POST_request(depth,doc);
-
-
-    
-
-
 
 
 //   ----- CHECKING ACTION STATE ---------
@@ -82,6 +79,7 @@ void loop()
       setup();
     }
     wait = 5;
+
 //  ------ CONVERTING TO JSON ----   
     deserializeJson(doc, response_arr);
   
