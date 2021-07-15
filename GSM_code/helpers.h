@@ -53,7 +53,7 @@ void checkGSM() {
 
 
 void parseATText(byte b) {
-  if(test)
+//  if(test)
     Serial.print(char(b));
   buffer[pos++] = b;
 
@@ -172,15 +172,4 @@ void add_to_response(String key , String value) {
   response.remove(response.length()-1,1);
   response = response + ",\"" + key + "\":" + value + "}";
   
-}
-
-void set_up_GSM(){
-  char comand[50];
-  String cmd = "AT+SAPBR=3,1,\"APN\",\"" + APN_name + "\"";   // Setup APN name of GSM code
-  cmd.toCharArray(comand , cmd.length());
-  sendGSM(comand);  
-  sendGSM("AT+SAPBR=1,1",3000);
-  sendGSM("AT+HTTPINIT");                                     // Turn on mobile data
-  sendGSM("AT+HTTPPARA=\"CID\",1");
-  actionState = AS_IDLE;
 }
