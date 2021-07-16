@@ -16,7 +16,6 @@ byte parseState = PS_DETECT_MSG_TYPE;
 char buffer[180];
 byte pos = 0;
 String response;
-char response_arr[MAX_LENGHT];
 int contentLength = 0;
 String status_code;
 
@@ -55,6 +54,7 @@ void checkGSM() {
 void parseATText(byte b) {
 //  if(test)
     Serial.print(char(b));
+//    Serial.println(parseState);
   buffer[pos++] = b;
 
   if ( pos >= sizeof(buffer) )
@@ -159,7 +159,7 @@ void parseATText(byte b) {
         add_to_response("status_code",status_code);
         parseState = PS_DETECT_MSG_TYPE;
         resetBuffer();
-        response.toCharArray(response_arr, response.length());
+//        response.toCharArray(response_arr, response.length());
         actionState = AS_RECEIVED_RESPONSE;
       }
     }
