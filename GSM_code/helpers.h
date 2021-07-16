@@ -156,7 +156,7 @@ void parseATText(byte b) {
       if ( contentLength <= 0 ) {
 
         // all content bytes have now been read
-        add_to_response("status_code",status_code);
+        add_to_response("sc",status_code);
         parseState = PS_DETECT_MSG_TYPE;
         resetBuffer();
 //        response.toCharArray(response_arr, response.length());

@@ -85,7 +85,7 @@ void loop()
 
 //  ------ CONVERTING TO JSON ----   
 
-    changeFilter("status_code");
+    changeFilter("sc");
     DeserializationError error = deserializeJson(doc, response,DeserializationOption::Filter(filter));
     if (error) {
       Serial.print(F("deserializeJson() failed: "));
@@ -95,7 +95,7 @@ void loop()
 
     serializeJsonPretty(doc, Serial);
     Serial.println();
-    if(doc["status_code"]==200  ) {
+    if(doc["sc"]==200  ) {
       changeFilter("s");
       error = deserializeJson(doc, response,DeserializationOption::Filter(filter));
       if (error) {
