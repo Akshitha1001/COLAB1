@@ -107,6 +107,8 @@ void reset_flowrate() {
 int motor_state = MOTOROFF;
 void motor_on(int tank, int isTesting = 0) {
 
+  Serial.print("Filling up tank ");
+  Serial.println(tank);
   digitalWrite(pipePins[tank], PIPEON);
   delay(5000);
 
@@ -137,7 +139,7 @@ void motor_on(int tank, int isTesting = 0) {
   motor_state = MOTORON;
   reset_flowrate();
   digitalWrite(pumpPin, MOTORON);
-  Serial.print("Time for filling up Tank");
+  Serial.println("Motor ON");
   return;
 }
 
