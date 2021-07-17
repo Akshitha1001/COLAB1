@@ -67,7 +67,8 @@ def decide_switch(depth):
 
 def respond_with_switch(switch):
     return flask.make_response(
-        {"switch" : switch},
+        {"s" : switch,
+            "a" : 'b'},
             HTTPStatus.OK
     )
 

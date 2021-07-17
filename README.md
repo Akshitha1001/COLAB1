@@ -15,7 +15,8 @@ if depth is >5 then switch value is 1 (response)
 *url* : http://jayashankar.pythonanywhere.com/abcdef/depth?d=9
 
 	response : {
-   			"switch":1
+   			"s":1,
+            "a":"b"
    		    } 
 		
 ->status of switch
@@ -29,7 +30,8 @@ if depth is >5 then switch value is 1 (response)
              }
     
     response :{
-    		"switch":0
+    		"s":1,
+            "a":"b"
               } 
 
 ->status of switch 
