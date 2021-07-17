@@ -18,6 +18,8 @@ unsigned int wait = 2;
 const size_t capacity = JSON_OBJECT_SIZE(1) + 30;
 DynamicJsonDocument doc(capacity);                      // JSON datatype to store response from server
 
+void changeFilter(String key);
+StaticJsonDocument<200> filter;
 
 void setup()
 {
@@ -29,6 +31,7 @@ void setup()
   pinMode(echoPin, INPUT);
   pinMode(relayPin, OUTPUT);
   digitalWrite(resetPin,HIGH);
+  response = "";
   char comand[50];
   String cmd = "AT+SAPBR=3,1,\"APN\",\"" + APN_name + "\"\"";   // Setup APN name of GSM code
   cmd.toCharArray(comand , cmd.length());
@@ -81,16 +84,42 @@ void loop()
     wait = 5;
 
 //  ------ CONVERTING TO JSON ----   
-    deserializeJson(doc, response_arr);
-  
-    if(doc["status_code"]==200  ) {
-      swi = int(doc["switch"]);
+
+    changeFilter("sc");
+    DeserializationError error = deserializeJson(doc, response,DeserializationOption::Filter(filter));
+    if (error) {
+      Serial.print(F("deserializeJson() failed: "));
+      Serial.println(error.c_str());
+      return;
+    }
+
+    serializeJsonPretty(doc, Serial);
+    Serial.println();
+    if(doc["sc"]==200  ) {
+      changeFilter("s");
+      error = deserializeJson(doc, response,DeserializationOption::Filter(filter));
+      if (error) {
+        Serial.print(F("deserializeJson() failed: "));
+        Serial.println(error.c_str());
+        return;
+      }
+      serializeJsonPretty(doc, Serial);
+      Serial.println();
+      swi = int(doc["s"]);
       turn_bulb(swi);
+      changeFilter("a");
+      error = deserializeJson(doc, response,DeserializationOption::Filter(filter));
+      if (error) {
+        Serial.print(F("deserializeJson() failed: "));
+        Serial.println(error.c_str());
+        return;
+      }
+      serializeJsonPretty(doc, Serial);
         
     }
     else{
       delay(wait*time_unit);
-      loop();
+      return;
     }
       
     Serial.print("Level of motor : " + String(depth) + " and switch is " + String(digitalRead(relayPin)));
@@ -100,3 +129,9 @@ void loop()
 
 
 }
+
+void changeFilter(String key){
+  filter.clear();
+  filter[key] = true;
+}
+ 
