@@ -1,4 +1,5 @@
 from flask import Flask
+from flask.scaffold import F
 import helpers
 import config
 
@@ -35,4 +36,4 @@ def depth_POST(key):
 
 
 if __name__ == "__main__" :
-    app.run(debug = True)
+    app.run(host='0.0.0.0')
