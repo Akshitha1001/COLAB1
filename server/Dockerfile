@@ -1,4 +1,4 @@
-FROM flaskbase
+FROM python
 
 COPY requirements.txt requirements.txt
 RUN pip3 --no-cache-dir install -r requirements.txt                                                                            
