@@ -4,10 +4,8 @@ source ./.env.common
 cd ${REPO_NAME}/${FOLDER_NAME}
 
 #LOAD FUNCTION SCRIPT
-
 source functions.sh
 
-# load_env_variables
 
 del_vm
 
