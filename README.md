@@ -131,3 +131,4 @@ This folder contains  appScripts for our SpreadSheets
 in time_script1.txt  for testing purppose we can cacluate the row using the formula:
 
     var rowNumber = hour*60*4 + roundedMins*4 + roundedSeconds;
+Hyee. Akshitha
