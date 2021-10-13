@@ -1,0 +1,267 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:toggle_switch/toggle_switch.dart';
+
+void main() {
+  runApp(MaterialApp(
+    home : MyApp(),
+  ));
+}
+
+
+class SwitchScreen extends StatefulWidget {
+  @override
+  SwitchClass createState() => new SwitchClass();
+}
+
+var textValue = 'OFF';
+class SwitchClass extends State {
+  bool isSwitched = false;
+  void toggleSwitch(bool value) {
+    if(isSwitched == false)
+    {
+      setState(() {
+        isSwitched = true;
+        textValue = 'AUTO';
+      });
+    }
+    else
+    {
+      setState(() {
+        isSwitched = false;
+        textValue = 'OFF';
+      });
+    }
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.all(5),
+          ),
+          Transform.scale(
+              scale: 1.5,
+              child: Switch(
+                onChanged: toggleSwitch,
+                value: isSwitched,
+                activeColor: Colors.deepPurple[200],
+                activeTrackColor: Colors.deepPurple,
+                inactiveThumbColor: Colors.deepPurple,
+                inactiveTrackColor: Colors.deepPurple[200],
+              )
+          ),
+          Text('$textValue', style: TextStyle(fontSize: 10),)
+        ]);
+  }
+}
+class MyApp extends StatefulWidget {
+  @override
+  SecondPage createState() => FirstPage();
+}
+class FirstPage extends State<MyApp> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Control your Devices'),
+        backgroundColor: Colors.deepPurple,
+      ),
+      body: Column(
+        children: [
+          Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+           Container(
+             width: 200,
+             height: 40,
+             margin: EdgeInsets.all(15),
+             padding: EdgeInsets.only(left:80,top:12),
+             decoration:BoxDecoration(
+               color:Colors.deepPurple,
+             ),
+               child: Text("System",style: TextStyle(color: Colors.white),),
+           ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Container(
+                    child: SwitchScreen()
+                ),
+         ],
+      ),
+      ],
+    ),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Container(
+                width: 200,
+                height: 40,
+                margin: EdgeInsets.all(15),
+                padding: EdgeInsets.only(left:85,top:12),
+                decoration:BoxDecoration(
+                  color:Colors.deepPurple,
+                ),
+                child: Text("AC",style: TextStyle(color: Colors.white)),
+              ),
+      ToggleSwitch(
+        initialLabelIndex: 0,
+        activeBgColor: [Colors.deepPurple],
+        activeFgColor: Colors.white,
+        inactiveBgColor: Colors.deepPurple[200],
+        inactiveFgColor: Colors.white,
+        totalSwitches: 3,
+        labels: ['Off', 'Auto', 'On'],
+        onToggle: (index) {},
+      ),
+              ],
+              ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Container(
+                width: 200,
+                height: 40,
+                margin: EdgeInsets.all(15),
+                padding: EdgeInsets.only(left:85,top:12),
+                decoration:BoxDecoration(
+                  color:Colors.deepPurple,
+                ),
+                child: Text("Intake",style: TextStyle(color: Colors.white)),
+              ),
+              ToggleSwitch(
+                initialLabelIndex: 0,
+                activeBgColor: [Colors.deepPurple],
+                activeFgColor: Colors.white,
+                inactiveBgColor: Colors.deepPurple[200],
+                inactiveFgColor: Colors.white,
+                totalSwitches: 3,
+                labels: ['Off', 'Auto', 'On'],
+                onToggle: (index) {},
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Container(
+                width: 200,
+                height: 40,
+                margin: EdgeInsets.all(15),
+                padding: EdgeInsets.only(left:85,top:12),
+                decoration:BoxDecoration(
+                  color:Colors.deepPurple,
+                ),
+                child: Text("Fan",style: TextStyle(color: Colors.white)),
+              ),
+              ToggleSwitch(
+                initialLabelIndex: 0,
+                activeBgColor: [Colors.deepPurple],
+                activeFgColor: Colors.white,
+                inactiveBgColor: Colors.deepPurple[200],
+                inactiveFgColor: Colors.white,
+                totalSwitches: 3,
+                labels: ['Off', 'Auto', 'On'],
+                onToggle: (index) {},
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Container(
+                child: SizedBox(
+                  width: 200.0,
+                  height: 100.0,)
+             ),
+           ],
+
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+            Container(
+            width: 200,
+            height: 40,
+              child:  RaisedButton(
+                  child: Text("System ID Settings", style: TextStyle(fontSize: 20),),
+                  onPressed: () =>
+                  {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SystemID())
+                    ),
+                  },
+                  color: Colors.deepPurple,
+                  textColor: Colors.white,
+                  padding: EdgeInsets.all(10.0),
+                  splashColor: Colors.grey,
+                )
+            ),
+              ],
+          ),
+    ],
+      ),
+
+    );
+  }
+}
+
+class SystemID extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('System ID Settings'),
+        backgroundColor: Colors.deepPurple,
+      ),
+        body:
+        Column(
+          children: <Widget>[
+            Container(
+              width: 1000,
+              height: 40,
+              margin: EdgeInsets.all(30),
+              padding: EdgeInsets.only(left:165,top:10),
+              decoration:BoxDecoration(
+                color:Colors.deepPurple,
+              ),
+              child: Text("Your System ID ",style: TextStyle(color: Colors.white, fontStyle: FontStyle.italic, fontSize: 20.0)),
+            ),
+            Container(
+              child: Text('abcdef',style: TextStyle(color: Colors.deepPurple,fontSize: 40.0,fontWeight: FontWeight.bold)),
+            ),
+            Container(
+                child: SizedBox(
+                  width: 300.0,
+                  height: 100.0,)
+            ),
+            Container(
+              child: Text('To change your system ID...Enter new System ID', style: TextStyle(fontSize: 20.0)),
+            ),
+            Container(
+                child: SizedBox(
+                  width: 200.0,
+                  height: 50.0,)
+            ),
+            Container(
+                        width:300.0,
+                        height:50.0,
+                        child: TextField(
+                        decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'System ID',
+                        hintText: 'Enter Your New System ID',
+                  ),
+                        ),
+            ),
+          ],
+        )
+    );
+  }
+}
+
